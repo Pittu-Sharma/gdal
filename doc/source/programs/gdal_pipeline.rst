@@ -264,6 +264,10 @@ step is set as the output of the nested pipeline ``read n43.tif ! hillshade -z 3
 
 .. only:: html
 
+   .. image:: ../../images/programs/gdal_pipeline_input_nested.svg
+      :width: 0
+      :height: 0
+
    .. raw:: html
 
       <object type="image/svg+xml"
@@ -319,10 +323,14 @@ with one of them being an output nested pipeline inside an input nested pipeline
 
 .. only:: html
 
+   .. image:: ../../images/programs/gdal_pipeline_output_nested.svg
+      :width: 0
+      :height: 0
+
    .. raw:: html
 
       <object type="image/svg+xml"
-              data="../_images/gdal_pipeline_input_nested.svg">
+              data="../_images/gdal_pipeline_output_nested.svg">
       </object>
 
 .. only:: not html
