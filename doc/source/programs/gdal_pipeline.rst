@@ -261,6 +261,8 @@ an output-generating step like ``info``, ``tile`` or ``write``
 In the above example, the value of the ``overlay`` argument of the ``blend``
 step is set as the output of the nested pipeline ``read n43.tif ! hillshade -z 30``.
 
+.. image:: ../../images/programs/gdal_pipeline_input_nested.svg
+
 .. _gdal_output_nested_pipeline:
 
 Output nested pipeline
@@ -303,6 +305,8 @@ with one of them being an output nested pipeline inside an input nested pipeline
                         blend --operator=hsv-value --overlay \
                             [ read n43.tif ! hillshade -z 30  ! tee [ write hillshade.tif --overwrite ] ] ! \
                         write colored-hillshade.tif --overwrite
+
+.. image:: ../../images/programs/gdal_pipeline_output_nested.svg
 
 Examples
 --------
