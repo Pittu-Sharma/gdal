@@ -29,7 +29,8 @@ Synopsis
 
 .. program-output:: gdal pipeline --help-doc=main
 
-A pipeline chains several steps, separated with the `!` (exclamation mark) character.
+A pipeline chains several steps, separated with the ``!`` (exclamation mark) character.
+Including a ``!`` between ``gdal pipeline`` and the first step is optional.
 The first step must be ``read``, ``calc``, ``concat``, ``mosaic`` or ``stack``,
 and the last one ``info``, ``tile`` or ``write``.
 Each step has its own positional or non-positional arguments.
@@ -261,7 +262,17 @@ an output-generating step like ``info``, ``tile`` or ``write``
 In the above example, the value of the ``overlay`` argument of the ``blend``
 step is set as the output of the nested pipeline ``read n43.tif ! hillshade -z 30``.
 
-.. image:: ../../images/programs/gdal_pipeline_input_nested.svg
+.. only:: html
+
+   .. raw:: html
+
+      <object type="image/svg+xml"
+              data="../_images/gdal_pipeline_input_nested.svg">
+      </object>
+
+.. only:: not html
+
+   .. image:: ../_images/gdal_pipeline_input_nested.svg
 
 .. _gdal_output_nested_pipeline:
 
@@ -306,7 +317,18 @@ with one of them being an output nested pipeline inside an input nested pipeline
                             [ read n43.tif ! hillshade -z 30  ! tee [ write hillshade.tif --overwrite ] ] ! \
                         write colored-hillshade.tif --overwrite
 
-.. image:: ../../images/programs/gdal_pipeline_output_nested.svg
+.. only:: html
+
+   .. raw:: html
+
+      <object type="image/svg+xml"
+              data="../_images/gdal_pipeline_input_nested.svg">
+      </object>
+
+.. only:: not html
+
+   .. image:: ../_images/gdal_pipeline_input_nested.svg
+
 
 Examples
 --------
