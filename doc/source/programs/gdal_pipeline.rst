@@ -272,7 +272,7 @@ step is set as the output of the nested pipeline ``read n43.tif ! hillshade -z 3
 
 .. only:: not html
 
-   .. image:: ../_images/gdal_pipeline_input_nested.svg
+   .. image:: ../../images/programs/gdal_pipeline_input_nested.svg
 
 .. _gdal_output_nested_pipeline:
 
@@ -327,7 +327,7 @@ with one of them being an output nested pipeline inside an input nested pipeline
 
 .. only:: not html
 
-   .. image:: ../_images/gdal_pipeline_input_nested.svg
+   .. image:: ../../images/programs/gdal_pipeline_output_nested.svg
 
 
 Examples
