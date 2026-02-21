@@ -21,7 +21,7 @@
 <!-- 1 -->
 <g id="node2" class="node">
 <title>1</title>
-<g id="a_node2"><a xlink:href="https://gdal.org/en/latest/programs/gdal_raster_color_map.html" xlink:title="https://gdal.org/en/latest/programs/gdal_raster_color_map.html" target="_blank">
+<g id="a_node2"><a xlink:href="../programs/gdal_raster_color_map.html" xlink:title="../programs/gdal_raster_color_map.html" target="_blank">
 <polygon fill="#cfe2ff" stroke="none" points="86.75,-107.75 86.75,-137.5 246.25,-137.5 246.25,-107.75 86.75,-107.75"/>
 <polygon fill="none" stroke="black" points="86.75,-107.75 86.75,-137.5 246.25,-137.5 246.25,-107.75 86.75,-107.75"/>
 <text xml:space="preserve" text-anchor="start" x="133.5" y="-118.2" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">color&#45;map</text>
@@ -39,7 +39,7 @@
 <!-- 2 -->
 <g id="node3" class="node">
 <title>2</title>
-<g id="a_node3"><a xlink:href="https://gdal.org/en/latest/programs/gdal_raster_blend.html" xlink:title="https://gdal.org/en/latest/programs/gdal_raster_blend.html" target="_blank">
+<g id="a_node3"><a xlink:href="../programs/gdal_raster_blend.html" xlink:title="../programs/gdal_raster_blend.html" target="_blank">
 <polygon fill="#cfe2ff" stroke="none" points="282.25,-83.62 282.25,-113.38 421.5,-113.38 421.5,-83.62 282.25,-83.62"/>
 <polygon fill="none" stroke="black" points="282.25,-83.62 282.25,-113.38 421.5,-113.38 421.5,-83.62 282.25,-83.62"/>
 <text xml:space="preserve" text-anchor="start" x="333.88" y="-94.08" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">blend</text>
@@ -85,7 +85,7 @@
 <!-- 4 -->
 <g id="node5" class="node">
 <title>4</title>
-<g id="a_node5"><a xlink:href="https://gdal.org/en/latest/programs/gdal_raster_hillshade.html" xlink:title="https://gdal.org/en/latest/programs/gdal_raster_hillshade.html" target="_blank">
+<g id="a_node5"><a xlink:href="../programs/gdal_raster_hillshade.html" xlink:title="../programs/gdal_raster_hillshade.html" target="_blank">
 <polygon fill="#cfe2ff" stroke="none" points="130.25,-29.75 130.25,-59.5 202.75,-59.5 202.75,-29.75 130.25,-29.75"/>
 <polygon fill="none" stroke="black" points="130.25,-29.75 130.25,-59.5 202.75,-59.5 202.75,-29.75 130.25,-29.75"/>
 <text xml:space="preserve" text-anchor="start" x="137.25" y="-40.2" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">hillshade</text>

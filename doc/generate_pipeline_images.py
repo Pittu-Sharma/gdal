@@ -13,7 +13,7 @@ gdal pipeline read n43.tif
 ! write out.tif --overwrite
 """
     output_fn = f"{IMAGE_ROOT}/programs/gdal_pipeline_input_nested.svg"
-    generate_diagram(pipeline, output_fn)
+    generate_diagram(pipeline, output_fn, docs_root="../programs")
 
 
 def test_gdal_pipeline_ouput_nested():
@@ -35,4 +35,4 @@ gdal raster pipeline
 ! write colored-hillshade.tif --overwrite
 """
     output_fn = f"{IMAGE_ROOT}/programs/gdal_pipeline_output_nested.svg"
-    generate_diagram(pipeline, output_fn)
+    generate_diagram(pipeline, output_fn, docs_root="../programs")
