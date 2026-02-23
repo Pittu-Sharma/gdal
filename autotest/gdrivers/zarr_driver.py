@@ -8780,3 +8780,55 @@ def test_zarr_build_overviews_mixed_arrays(tmp_vsimem):
         ar = rg.OpenMDArray(name)
         assert ar.GetOverviewCount() == 0, f"{name} should have 0 overviews"
     assert gdal.GetLastErrorMsg() == "", f"Unexpected warning: {gdal.GetLastErrorMsg()}"
+
+
+###############################################################################
+
+
+@gdaltest.enable_exceptions()
+@pytest.mark.parametrize(
+    "src_interleave,blocksize",
+    [
+        ("INTERLEAVE=BAND", "BLOCKSIZE=3,31,33"),
+        ("INTERLEAVE=BAND", "BLOCKSIZE=1,31,33"),
+        ("INTERLEAVE=PIXEL", "BLOCKSIZE=31,33,3"),
+        ("INTERLEAVE=PIXEL", "BLOCKSIZE=31,33,1"),
+    ],
+)
+def test_zarr_driver_create_copy_v3_multithreaded(
+    tmp_vsimem, src_interleave, blocksize
+):
+
+    out_dirname = tmp_vsimem / "test.zarr"
+    src_ds = gdal.Translate(
+        tmp_vsimem / "pixel_interleaved.tif",
+        gdal.Open("data/small_world.tif"),
+        outputType=gdal.GDT_UInt16,
+        creationOptions=[src_interleave],
+    )
+    with gdal.config_option("GDAL_NUM_THREADS", "ALL_CPUS"):
+        out_ds = gdal.GetDriverByName("Zarr").CreateCopy(
+            out_dirname, src_ds, options=[blocksize, "COMPRESS=GZIP", "FORMAT=ZARR_V3"]
+        )
+        assert gdal.VSIStatL(out_dirname / "test/c/0/0/0") is not None
+        same = out_ds.ReadRaster() == src_ds.ReadRaster()
+    assert same
+
+
+###############################################################################
+
+
+@gdaltest.enable_exceptions()
+def test_zarr_driver_create_copy_v3_multithreaded_error(tmp_vsimem):
+    src_ds = gdal.Open("data/small_world.tif")
+    gdal.Mkdir(tmp_vsimem / "test.zarr/test/c/0/0/0", 0o755)
+    with gdal.config_option("GDAL_NUM_THREADS", "ALL_CPUS"):
+        with pytest.raises(
+            Exception,
+            match=r"ZarrV3Array::IWrite\(\): Cannot create file /vsimem/test_zarr_driver_create_copy_v3_multithreaded_error/test.zarr/test/c/0/0/0",
+        ):
+            gdal.GetDriverByName("Zarr").CreateCopy(
+                tmp_vsimem / "test.zarr",
+                src_ds,
+                options=["BLOCKSIZE=3,31,33", "COMPRESS=GZIP", "FORMAT=ZARR_V3"],
+            )

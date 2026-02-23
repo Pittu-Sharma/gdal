@@ -1415,6 +1415,14 @@ class ZarrV3Array final : public ZarrArray
                 const GDALExtendedDataType &bufferDataType,
                 const void *pSrcBuffer) override;
 
+    bool WriteChunksThreadSafe(const GUInt64 *arrayStartIdx,
+                               const size_t *count, const GInt64 *arrayStep,
+                               const GPtrDiff_t *bufferStride,
+                               const GDALExtendedDataType &bufferDataType,
+                               const void *pSrcBuffer, const int iThread,
+                               const int nThreads,
+                               std::string &osErrorMsg) const;
+
     void LoadOverviews() const;
 
     void ReconstructCreationOptionsFromCodecs();
@@ -1455,6 +1463,14 @@ class ZarrV3Array final : public ZarrArray
                           const int *panOverviewList,
                           GDALProgressFunc pfnProgress, void *pProgressData,
                           CSLConstList papszOptions) override;
+
+    static void
+    ExtractSubArrayFromLargerOne(const ZarrByteVectorQuickResize &abySrc,
+                                 const std::vector<size_t> &anSrcBlockSize,
+                                 const std::vector<size_t> &anInnerBlockSize,
+                                 const std::vector<size_t> &anInnerBlockIndices,
+                                 ZarrByteVectorQuickResize &abyChunk,
+                                 const size_t nDTSize);
 
   protected:
     std::string GetDataDirectory() const override;
