@@ -58,6 +58,7 @@ template <class T> inline T MultiplyElements(const std::vector<T> &vector)
 /*                             ZarrDataset                              */
 /************************************************************************/
 
+class ZarrArray;
 class ZarrGroupBase;
 
 class ZarrDataset final : public GDALDataset
@@ -71,7 +72,7 @@ class ZarrDataset final : public GDALDataset
     bool m_bSpatialProjConvention = false;
     std::shared_ptr<GDALDimension> m_poDimX{};
     std::shared_ptr<GDALDimension> m_poDimY{};
-    std::shared_ptr<GDALMDArray> m_poSingleArray{};
+    std::shared_ptr<ZarrArray> m_poSingleArray{};
 
     static GDALDataset *OpenMultidim(const char *pszFilename, bool bUpdateMode,
                                      CSLConstList papszOpenOptions);
@@ -111,6 +112,14 @@ class ZarrDataset final : public GDALDataset
     CPLErr SetGeoTransform(const GDALGeoTransform &gt) override;
 
     std::shared_ptr<GDALGroup> GetRootGroup() const override;
+
+  protected:
+    CPLErr IRasterIO(GDALRWFlag eRWFlag, int nXOff, int nYOff, int nXSize,
+                     int nYSize, void *pData, int nBufXSize, int nBufYSize,
+                     GDALDataType eBufType, int nBandCount,
+                     BANDMAP_TYPE panBandMap, GSpacing nPixelSpace,
+                     GSpacing nLineSpace, GSpacing nBandSpace,
+                     GDALRasterIOExtraArg *psExtraArg) override;
 };
 
 /************************************************************************/
@@ -449,6 +458,8 @@ class ZarrGroupBase CPL_NON_FINAL : public GDALGroup
     ~ZarrGroupBase() override;
 
     virtual bool Close();
+
+    bool Flush();
 
     std::shared_ptr<GDALAttribute>
     GetAttribute(const std::string &osName) const override
