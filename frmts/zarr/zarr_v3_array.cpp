@@ -3669,7 +3669,8 @@ CPLErr ZarrV3Array::BuildOverviews(const char *pszResampling, int nOverviews,
                                      "variable for overview");
                             return CE_Failure;
                         }
-                        aoOvrDims.back()->SetIndexingVariable(poCoordArray);
+                        aoOvrDims.back()->SetIndexingVariable(
+                            std::move(poCoordArray));
                     }
                 }
             }
@@ -3760,7 +3761,7 @@ CPLErr ZarrV3Array::BuildOverviews(const char *pszResampling, int nOverviews,
             return CE_Failure;
         }
 
-        poChainSource = poOvrArray;
+        poChainSource = std::move(poOvrArray);
     }
 
     // Write multiscales metadata on parent group.
