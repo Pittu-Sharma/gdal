@@ -1209,9 +1209,13 @@ def test_vsis3_readdir(aws_test_config, webserver_port):
     )
 
     with webserver.install_http_handler(handler):
-        f = open_for_read(
-            "/vsis3/s3_fake_bucket2/a_dir with_space/resource3 with_space.bin"
-        )
+        with gdaltest.error_raised(
+            gdal.CE_Warning,
+            match="Ignoring key 'a_dir with_space/../../not_ok' that has a path traversal pattern",
+        ):
+            f = open_for_read(
+                "/vsis3/s3_fake_bucket2/a_dir with_space/resource3 with_space.bin"
+            )
     if f is None:
         pytest.fail()
     gdal.VSIFCloseL(f)
