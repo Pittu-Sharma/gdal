@@ -914,7 +914,7 @@ def test_vsis3_2(aws_test_config_as_config_options_or_credentials, webserver_por
             request.send_response(307)
             response = """<?xml version="1.0" encoding="UTF-8"?>
             <Error>
-            <Message>bla</Message>
+            <!-- no <Message> to test compatibility with OpenStack Swift on CloudFerro -->
             <Code>TemporaryRedirect</Code>
             <Endpoint>localhost:%d</Endpoint>
             </Error>""" % request.server.port
@@ -982,6 +982,46 @@ def test_vsis3_2(aws_test_config_as_config_options_or_credentials, webserver_por
         gdal.VSIFCloseL(f)
 
     assert data == "bar"
+
+
+###############################################################################
+
+
+@pytest.mark.parametrize("with_error_message", [True, False])
+def test_vsis3_request_timeout(aws_test_config, webserver_port, with_error_message):
+    gdal.VSICurlClearCache()
+
+    error_msg = "<Message>message</Message>" if with_error_message else ""
+
+    handler = webserver.SequentialHandler()
+    handler.add(
+        "GET",
+        "/test_vsis3_request_timeout/?delimiter=%2F&list-type=2",
+        400,
+        {"Content-type": "application/xml"},
+        f"""<?xml version="1.0" encoding="UTF-8"?>
+            <Error>{error_msg}
+            <Code>RequestTimeout</Code>
+            </Error>""",
+    )
+    handler.add(
+        "GET",
+        "/test_vsis3_request_timeout/?delimiter=%2F&list-type=2",
+        200,
+        {"Content-type": "application/xml"},
+        """<?xml version="1.0" encoding="UTF-8"?>
+            <ListBucketResult>
+                <Prefix></Prefix>
+                <Contents>
+                    <Key>test.bin</Key>
+                    <LastModified>1970-01-01T00:00:01.000Z</LastModified>
+                    <Size>123456</Size>
+                </Contents>
+            </ListBucketResult>""",
+    )
+    with webserver.install_http_handler(handler):
+        with gdal.VSIFile("/vsis3/test_vsis3_request_timeout/test.bin", "rb"):
+            pass
 
 
 ###############################################################################
