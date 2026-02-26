@@ -17,8 +17,6 @@ an anchor file for access to non-file oriented datasources.
 
 Vector virtual files may be prepared by hand, howerever e.g.,
 ":program:`ogrmerge` -o merged.vrt *.shp" also works too.
-See also the unofficial test script can be found at
-https://github.com/OSGeo/gdal/blob/master/swig/python/gdal-utils/osgeo_utils/samples/ogr2vrt.py .
 
 Note .vrt files starting with
 
