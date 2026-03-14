@@ -6,6 +6,22 @@ What is GDAL?
 
 .. descriptionstartshere
 
+GDAL (Geospatial Data Abstraction Library) is an open source translator
+library for raster and vector geospatial data formats. It provides a
+single raster data model and a single vector data model for applications
+to work with many different geospatial formats through a unified API.
+
+GDAL is widely used in geographic information systems (GIS), remote
+sensing workflows, and geospatial data processing pipelines. The
+project provides both command-line utilities (such as
+:program:`gdalinfo`, :program:`gdal_translate`, and :program:`gdalwarp`)
+as well as programming interfaces in C/C++ and Python for building
+geospatial applications.
+
+Typical uses of GDAL include inspecting dataset metadata, converting
+between geospatial data formats, performing coordinate transformations,
+and processing large raster or vector datasets efficiently.
+
 GDAL is a translator library for raster and vector geospatial data formats that is released under an MIT style Open Source :ref:`license` by the `Open Source Geospatial Foundation`_. As a library, it presents a single raster abstract data model and single vector abstract data model to the calling application for all supported formats. It also comes with a variety of useful command line utilities for data translation and processing. The `NEWS`_ page describes the February 2026 GDAL/OGR 3.12.2 release.
 
 .. only:: html
