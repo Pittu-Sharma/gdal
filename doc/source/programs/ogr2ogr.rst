@@ -746,6 +746,15 @@ Examples
       ogr2ogr -where "\"POP_EST\" < 1000000" \
         output.gpkg natural_earth_vector.gpkg ne_10m_admin_0_countries
 
+.. example::
+   :title: Convert a Shapefile to GeoJSON
+
+   .. code-block:: console
+
+      ogr2ogr -f GeoJSON output.json input.shp
+
+This command converts the input Shapefile dataset into GeoJSON format.
+
 
 More examples are given in the individual format pages.
 
