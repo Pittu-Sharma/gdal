@@ -164,12 +164,12 @@ GDALDataset *KEADataset::Open(GDALOpenInfo *poOpenInfo)
                      poOpenInfo->pszFilename, e.what());
             return nullptr;
         }
-        catch (...)
+        catch (const std::exception &e)
         {
             // was a problem - can't be a valid file
             CPLError(CE_Failure, CPLE_OpenFailed,
-                     "Attempt to open file `%s' failed. Error: unknown\n",
-                     poOpenInfo->pszFilename);
+                     "HDF5 compatibility issue while opening KEA dataset: %s",
+                     e.what());
             return nullptr;
         }
     }
