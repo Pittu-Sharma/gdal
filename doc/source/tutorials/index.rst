@@ -16,6 +16,7 @@ Raster
    gdal_grid_tut
    geotransforms_tut
    raster_dtm_tut
+   raster_workflow_tutorial
 
 Multidimensional raster
 -----------------------
