@@ -108,6 +108,17 @@ Program-Specific Options
 
     Remove metadata domain, at the dataset level. May be repeated.
 
+Standard Options
+----------------
+
+.. collapse:: Details
+
+    .. include:: gdal_options/oo.rst
+
+.. Return status code
+.. ------------------
+
+.. include:: return_code.rst
 
 Examples
 --------

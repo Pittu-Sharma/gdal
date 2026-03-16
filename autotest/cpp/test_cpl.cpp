@@ -1157,11 +1157,30 @@ TEST_F(test_cpl, CPLGetDirname)
         "2Fgdal%2Fmaster%2Fautotest%2Fogr%2Fdata");
 }
 
-TEST_F(test_cpl, VSIGetDiskFreeSpace)
+TEST_F(test_cpl, CPLLexicallyNormalize)
 {
-    ASSERT_TRUE(VSIGetDiskFreeSpace("/vsimem/") > 0);
-    ASSERT_TRUE(VSIGetDiskFreeSpace(".") == -1 ||
-                VSIGetDiskFreeSpace(".") >= 0);
+    EXPECT_STREQ(CPLLexicallyNormalize("", '/').c_str(), "");
+    EXPECT_STREQ(CPLLexicallyNormalize("x", '/').c_str(), "x");
+    EXPECT_STREQ(CPLLexicallyNormalize("xy", '/').c_str(), "xy");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/", '/').c_str(), "x/");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/.", '/').c_str(), "x/");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/./", '/').c_str(), "x/");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/y", '/').c_str(), "x/y");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/yz", '/').c_str(), "x/yz");
+    EXPECT_STREQ(CPLLexicallyNormalize("xy/z", '/').c_str(), "xy/z");
+    EXPECT_STREQ(CPLLexicallyNormalize("x//y", '/').c_str(), "x/y");
+    EXPECT_STREQ(CPLLexicallyNormalize("/", '/').c_str(), "/");
+    EXPECT_STREQ(CPLLexicallyNormalize("/x", '/').c_str(), "/x");
+    EXPECT_STREQ(CPLLexicallyNormalize("../x", '/').c_str(), "../x");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/../y", '/').c_str(), "y");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/..", '/').c_str(), "");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/../", '/').c_str(), "");
+    EXPECT_STREQ(CPLLexicallyNormalize("xy/../z", '/').c_str(), "z");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/../yz", '/').c_str(), "yz");
+    EXPECT_STREQ(CPLLexicallyNormalize("x/../../yz", '/').c_str(), "../yz");
+    EXPECT_STREQ(CPLLexicallyNormalize("a/x/y/../../t", '/').c_str(), "a/t");
+    EXPECT_STREQ(CPLLexicallyNormalize("a\\x\\y\\..\\..\\t", '/', '\\').c_str(),
+                 "a\\t");
 }
 
 TEST_F(test_cpl, CPLsscanf)
@@ -4368,21 +4387,39 @@ TEST_F(test_cpl, test_config_overrides_environment)
     char szEnvVar[] = "TEST_CONFIG_OVERRIDES_ENVIRONMENT=123";
     putenv(szEnvVar);
 
-    ASSERT_STREQ(
-        CPLGetConfigOption("TEST_CONFIG_OVERRIDES_ENVIRONMENT", nullptr),
-        "123");
+    constexpr const char *key = "TEST_CONFIG_OVERRIDES_ENVIRONMENT";
 
-    CPLSetConfigOption("TEST_CONFIG_OVERRIDES_ENVIRONMENT", "456");
+    ASSERT_STREQ(CPLGetConfigOption(key, nullptr), "123");
 
-    ASSERT_STREQ(
-        CPLGetConfigOption("TEST_CONFIG_OVERRIDES_ENVIRONMENT", nullptr),
-        "456");
+    CPLSetConfigOption(key, "456");
 
-    CPLSetConfigOption("TEST_CONFIG_OVERRIDES_ENVIRONMENT", nullptr);
+    ASSERT_STREQ(CPLGetConfigOption(key, nullptr), "456");
 
-    ASSERT_STREQ(
-        CPLGetConfigOption("TEST_CONFIG_OVERRIDES_ENVIRONMENT", nullptr),
-        "123");
+    CPLSetConfigOption(key, nullptr);
+
+    ASSERT_STREQ(CPLGetConfigOption(key, nullptr), "123");
+
+    CPLSetConfigOption(key, CPL_NULL_VALUE);
+
+    ASSERT_EQ(CPLGetConfigOption(key, nullptr), nullptr);
+
+    CPLSetConfigOption(key, nullptr);
+
+    ASSERT_STREQ(CPLGetConfigOption(key, nullptr), "123");
+
+    {
+        CPLConfigOptionSetter oSetter(key, nullptr, false);
+
+        ASSERT_EQ(CPLGetConfigOption(key, nullptr), nullptr);
+    }
+
+    ASSERT_STREQ(CPLGetConfigOption(key, nullptr), "123");
+
+    CPLSetThreadLocalConfigOption(key, CPL_NULL_VALUE);
+
+    ASSERT_EQ(CPLGetConfigOption(key, nullptr), nullptr);
+
+    ASSERT_EQ(CPLGetThreadLocalConfigOption(key, nullptr), nullptr);
 }
 
 // Test CPLWorkerThreadPool recursion
