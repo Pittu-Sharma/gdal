@@ -15,11 +15,23 @@ datum and geoid transformations.
 This driver is generally not accessed directly by end users, but is used
 implicitly by GDAL when vertical datum transformations are requested.
 
+These grids have been used historically by PROJ, until PROJ 7.0 where
+`GeoTIFF-based grids <https://proj.org/en/stable/specifications/geodetictiffgrids.html>`__
+have been introduced and are now the preferred way to convey geoid models.
+
 Driver capabilities
 -------------------
 
 * Read-only
 * Raster
+
+.. supports_createcopy::
+
+.. supports_create::
+
+.. supports_georeferencing::
+
+.. supports_virtualio::
 
 File format
 -----------
@@ -31,5 +43,5 @@ vertical components.
 See also
 --------
 
-* https://gdal.org/programs/gdalwarp.html
+* :ref:`gdalwarp`
 * https://proj.org/

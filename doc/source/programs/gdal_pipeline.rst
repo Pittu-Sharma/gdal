@@ -29,7 +29,8 @@ Synopsis
 
 .. program-output:: gdal pipeline --help-doc=main
 
-A pipeline chains several steps, separated with the `!` (exclamation mark) character.
+A pipeline chains several steps, separated with the ``!`` (exclamation mark) character.
+Including a ``!`` between ``gdal pipeline`` and the first step is optional.
 The first step must be ``read``, ``calc``, ``concat``, ``mosaic`` or ``stack``,
 and the last one ``info``, ``tile`` or ``write``.
 Each step has its own positional or non-positional arguments.
@@ -261,6 +262,22 @@ an output-generating step like ``info``, ``tile`` or ``write``
 In the above example, the value of the ``overlay`` argument of the ``blend``
 step is set as the output of the nested pipeline ``read n43.tif ! hillshade -z 30``.
 
+.. only:: html
+
+   .. image:: ../../images/programs/gdal_pipeline_input_nested.svg
+      :width: 0
+      :height: 0
+
+   .. raw:: html
+
+      <object type="image/svg+xml"
+              data="../_images/gdal_pipeline_input_nested.svg">
+      </object>
+
+.. only:: not html
+
+   .. image:: ../../images/programs/gdal_pipeline_input_nested.svg
+
 .. _gdal_output_nested_pipeline:
 
 Output nested pipeline
@@ -304,6 +321,28 @@ with one of them being an output nested pipeline inside an input nested pipeline
                             [ read n43.tif ! hillshade -z 30  ! tee [ write hillshade.tif --overwrite ] ] ! \
                         write colored-hillshade.tif --overwrite
 
+.. only:: html
+
+   .. image:: ../../images/programs/gdal_pipeline_output_nested.svg
+      :width: 0
+      :height: 0
+
+   .. raw:: html
+
+      <object type="image/svg+xml"
+              data="../_images/gdal_pipeline_output_nested.svg">
+      </object>
+
+.. only:: not html
+
+   .. image:: ../../images/programs/gdal_pipeline_output_nested.svg
+
+.. Return status code
+.. ------------------
+
+.. include:: return_code.rst
+
+
 Examples
 --------
 
@@ -327,3 +366,26 @@ Examples
    .. code-block:: bash
 
         $ gdal pipeline raster_reproject.gdalg.json --input=my.gpkg --output=out.tif --dst-crs=EPSG:32631
+
+.. example::
+   :title: Buffer a line dataset to create a new polygon dataset
+   :id: gdal-pipeline-buffer-line
+
+   This example uses a ``lines.gpkg`` dataset containing a single layer named ``lines``,
+   with a geometry field named ``geom`` and an integer attribute named ``width``. The value
+   of this attribute is used as the buffer distance for each feature.
+
+   .. code-block:: bash
+
+        gdal vector pipeline \
+            ! read lines.gpkg \
+            ! sql "SELECT fid, ST_Buffer(geom, width) AS geom FROM lines" \
+            ! set-geom-type --geometry-type Polygon \
+            ! write buffered-lines.gpkg --output-layer=BufferedLines --overwrite --overwrite-layer
+
+   .. note::
+
+      When creating derived geometries using SQL, avoid using ``SELECT *``.
+      Including the original geometry field will result in multiple geometry
+      columns in the output. Instead, explicitly list the required attributes
+      and return a single geometry column.
