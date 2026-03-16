@@ -499,3 +499,10 @@ Examples
        $ gdal_translate -strict test.tif test.webp
        ERROR 6: WEBP driver doesn't support data type Int16.
        Only UInt8 bands supported.
+
+.. example::
+   :title: Convert a raster to GeoTIFF format
+
+   .. code-block:: console
+
+      gdal_translate -of GTiff input.vrt output.tif
