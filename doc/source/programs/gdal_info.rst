@@ -46,3 +46,13 @@ Examples
    .. code-block:: console
 
        $ gdal --drivers
+
+.. example::
+   :title: Display metadata and information about a raster dataset
+
+   .. code-block:: console
+
+       gdalinfo input.tif
+
+This command prints information about the raster dataset including
+size, coordinate system, and metadata.
