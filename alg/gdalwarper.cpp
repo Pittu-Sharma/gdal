@@ -265,12 +265,14 @@ CPLErr CPL_STDCALL GDALCreateAndReprojectImage(
     int nPixels = 0;
     int nLines = 0;
 
-    if (GDALSuggestedWarpOutput(hSrcDS, GDALGenImgProjTransform, hTransformArg,
-                                adfDstGeoTransform, &nPixels,
-                                &nLines) != CE_None)
-        return CE_Failure;
+    CPLErr eErr =
+        GDALSuggestedWarpOutput(hSrcDS, GDALGenImgProjTransform, hTransformArg,
+                                adfDstGeoTransform, &nPixels, &nLines);
 
     GDALDestroyGenImgProjTransformer(hTransformArg);
+
+    if (eErr != CE_None)
+        return eErr;
 
     /* -------------------------------------------------------------------- */
     /*      Create the output file.                                         */
@@ -292,9 +294,9 @@ CPLErr CPL_STDCALL GDALCreateAndReprojectImage(
     /* -------------------------------------------------------------------- */
     /*      Perform the reprojection.                                       */
     /* -------------------------------------------------------------------- */
-    CPLErr eErr = GDALReprojectImage(
-        hSrcDS, pszSrcWKT, hDstDS, pszDstWKT, eResampleAlg, dfWarpMemoryLimit,
-        dfMaxError, pfnProgress, pProgressArg, psOptions);
+    eErr = GDALReprojectImage(hSrcDS, pszSrcWKT, hDstDS, pszDstWKT,
+                              eResampleAlg, dfWarpMemoryLimit, dfMaxError,
+                              pfnProgress, pProgressArg, psOptions);
 
     GDALClose(hDstDS);
 
@@ -370,6 +372,11 @@ CPLErr GDALWarpNoDataMasker(void *pMaskFuncArg, int nBandCount,
             return GDALWarpNoDataMaskerT(padfNoData, nPixels,
                                          *ppImageData,  // Already a GByte *.
                                          panValidityMask, pbOutAllValid);
+
+        case GDT_Int8:
+            return GDALWarpNoDataMaskerT(
+                padfNoData, nPixels, reinterpret_cast<int8_t *>(*ppImageData),
+                panValidityMask, pbOutAllValid);
 
         case GDT_Int16:
             return GDALWarpNoDataMaskerT(
@@ -1770,8 +1777,6 @@ void CPL_STDCALL GDALWarpResolveWorkingDataType(GDALWarpOptions *psOptions)
         return;
     }
 
-    psOptions->eWorkingDataType = GDT_UInt8;
-
     // If none of the provided input nodata values can be represented in the
     // data type of the corresponding source band, ignore them.
     if (psOptions->hSrcDS && psOptions->padfSrcNoDataReal)
@@ -1856,6 +1861,9 @@ void CPL_STDCALL GDALWarpResolveWorkingDataType(GDALWarpOptions *psOptions)
                 psOptions->padfDstNoDataImag[iBand], true);
         }
     }
+
+    if (psOptions->eWorkingDataType == GDT_Unknown)
+        psOptions->eWorkingDataType = GDT_UInt8;
 
     const bool bApplyVerticalShift = CPLFetchBool(
         psOptions->papszWarpOptions, "APPLY_VERTICAL_SHIFT", false);

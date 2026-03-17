@@ -225,7 +225,7 @@ Options for generated HTML viewers a la Google Maps
 
 .. option:: -g <GOOGLEKEY>, --googlekey=<GOOGLEKEY>
 
-  Google Maps API key from http://code.google.com/apis/maps/signup.html.
+  Google Maps API key from https://developers.google.com/maps/get-started.
 
 .. option:: -b <BINGKEY>, --bingkey=<BINGKEY>
 
@@ -293,6 +293,10 @@ The following configuration options are available to further customize the JPEG 
 
     QUALITY is a integer between 1-100. Default is 75.
 
+.. Return status code
+.. ------------------
+
+.. include:: return_code.rst
 
 Examples
 --------
