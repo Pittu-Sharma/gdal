@@ -588,10 +588,10 @@ OGRErr OGR_F_SetGeometry(OGRFeatureH hFeat, OGRGeometryH hGeom)
  * is correct and it will result in deallocation of currently assigned geometry
  * without assigning new one.
  *
- * @return OGRERR_NONE if successful, or OGR_UNSUPPORTED_GEOMETRY_TYPE if
- * the geometry type is illegal for the OGRFeatureDefn (checking not yet
- * implemented).
- *
+ * @return OGRERR_NONE if successful.
+ * 
+ * Note: The geometry type is not currently validated by this method,
+ * so OGRERR_UNSUPPORTED_GEOMETRY_TYPE is not  returned.
  * @since GDAL 3.11
  */
 
@@ -609,7 +609,8 @@ OGRErr OGRFeature::SetGeometry(std::unique_ptr<OGRGeometry> poGeomIn)
  * \brief Take away ownership of geometry.
  *
  * Fetch the geometry from this feature, and clear the reference to the
- * geometry on the feature.  This is a mechanism for the application to
+ * geometry on the feature.  This is a mech
+ * anism for the application to
  * take over ownership of the geometry from the feature without copying.
  * Sort of an inverse to SetGeometryDirectly().
  *
