@@ -607,6 +607,25 @@ int wrapper_GDALGCPsToGeoTransform( int nGCPs, GDAL_GCP const * pGCPs,
 }
 }
 #else
+
+%feature("docstring") GDALGCPsToGeoTransform "
+Compute geotransform from a list of GCPs.
+
+Parameters
+----------
+nGCPs : int
+    Number of GCPs
+pGCPs : list of GCP
+    Ground control points
+bApproxOK : int, optional
+    Whether approximate transformation is allowed (default = 1)
+
+Returns
+-------
+tuple or None
+    6-element geotransform tuple, or None on failure
+";
+
 %apply (IF_FALSE_RETURN_NONE) { (RETURN_NONE) };
 RETURN_NONE GDALGCPsToGeoTransform( int nGCPs, GDAL_GCP const * pGCPs,
                                      double argout[6], int bApproxOK = 1 );
